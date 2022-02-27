@@ -1,10 +1,18 @@
+/*
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: zhazhayu
+ * @Date: 2022-01-16 21:17:06
+ * @LastEditors: zhazhayu
+ * @LastEditTime: 2022-01-19 17:03:23
+ */
 import axios from 'axios';
-
+axios.defaults.headers.post['Content-Type'] = 'application/json'
 const service = axios.create({
     // process.env.NODE_ENV === 'development' 来判断是否开发环境
     // easy-mock服务挂了，暂时不使用了
-    // baseURL: 'https://www.easy-mock.com/mock/592501a391470c0ac1fab128',
-    timeout: 5000
+    baseURL: 'https://server.angoykeith.xyz/',
+    // timeout: 8000
 });
 
 service.interceptors.request.use(

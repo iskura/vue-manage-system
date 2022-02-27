@@ -1,196 +1,302 @@
 <template>
-    <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 基础表格
-                </el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <div class="container">
-            <div class="handle-box">
-                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">
-                    <el-option key="1" label="广东省" value="广东省"></el-option>
-                    <el-option key="2" label="湖南省" value="湖南省"></el-option>
-                </el-select>
-                <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-            </div>
-            <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="用户名"></el-table-column>
-                <el-table-column label="账户余额">
-                    <template #default="scope">￥{{ scope.row.money }}</template>
-                </el-table-column>
-                <el-table-column label="头像(查看大图)" align="center">
-                    <template #default="scope">
-                        <el-image class="table-td-thumb" :src="scope.row.thumb" :preview-src-list="[scope.row.thumb]">
-                        </el-image>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="状态" align="center">
-                    <template #default="scope">
-                        <el-tag :type="
-                                scope.row.state === '成功'
-                                    ? 'success'
-                                    : scope.row.state === '失败'
-                                    ? 'danger'
-                                    : ''
-                            ">{{ scope.row.state }}</el-tag>
-                    </template>
-                </el-table-column>
-
-                <el-table-column prop="date" label="注册时间"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
-                    <template #default="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑
-                        </el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red"
-                            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <div class="pagination">
-                <el-pagination background layout="total, prev, pager, next" :current-page="query.pageIndex"
-                    :page-size="query.pageSize" :total="pageTotal" @current-change="handlePageChange"></el-pagination>
-            </div>
-        </div>
-
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" v-model="editVisible" width="30%">
-            <el-form label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
-                </el-form-item>
-            </el-form>
-            <template #footer>
-                <span class="dialog-footer">
-                    <el-button @click="editVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="saveEdit">确 定</el-button>
-                </span>
-            </template>
-        </el-dialog>
+  <div>
+    <div class="crumbs">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>
+          <i class="el-icon-lx-cascades"></i> 基础表格
+        </el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
+    <div class="container">
+      <div class="handle-box">
+        <el-select
+          v-model="query.address"
+          placeholder="地址"
+          class="handle-select mr10"
+        >
+          <el-option key="1" label="前端" value=""></el-option>
+          <el-option key="2" label="闲谈"></el-option>
+          <el-option key="3" label="笔记"></el-option>
+          <el-option key="4" label="技术"></el-option>
+          <el-option key="5" label="生活"></el-option>
+          <el-option key="6" label="设计"></el-option>
+        </el-select>
+        <el-input
+          v-model="query.name"
+          placeholder="用户名"
+          class="handle-input mr10"
+        ></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+          >搜索</el-button
+        >
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="editVisible = true"
+          >新建</el-button
+        >
+      </div>
+      <el-table
+        :data="tableData"
+        border
+        class="table"
+        ref="multipleTable"
+        header-cell-class-name="table-header"
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          width="55"
+          align="center"
+        ></el-table-column>
+        <el-table-column prop="title" label="标题"></el-table-column>
+        <el-table-column label="文章封面" align="center" width="100">
+          <template #default="scope">
+            <el-image class="table-td-thumb" :src="scope.row.url"> </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column label="内容" width="500"
+          ><template v-slot:default="scope">{{
+            scope.row.content.substring(0, 300)
+          }}</template></el-table-column
+        >
+        <!-- <el-table-column label="状态" align="center" width="60">
+          <template #default="scope">
+            <el-tag
+              :type="
+                scope.row.state === '1'
+                  ? 'success'
+                  : scope.row.state === '0'
+                  ? 'danger'
+                  : ''
+              "
+              >{{ scope.row.state }}</el-tag
+            >
+          </template>
+        </el-table-column> -->
+
+        <el-table-column label="创建时间" width="80">
+          <template v-slot:default="scope">{{
+            day(scope.row.createtime)
+          }}</template>
+        </el-table-column>
+        <el-table-column label="更新时间" width="80"
+          ><template v-slot:default="scope">{{
+            day(scope.row.updatetime)
+          }}</template></el-table-column
+        >
+        <el-table-column label="操作" width="150" align="center">
+          <template #default="scope">
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.$index, scope.row)"
+              >编辑
+            </el-button>
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              class="red"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination">
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :current-page="query.pageIndex"
+          :page-size="query.pageSize"
+          :total="pageTotal"
+          @current-change="handlePageChange"
+        ></el-pagination>
+      </div>
+    </div>
+
+    <!-- 编辑弹出框 -->
+    <el-dialog title="编辑" v-model="editVisible" width="75%">
+      <el-form label-width="70px" class="edit">
+        <el-form-item label="id">
+          <el-input
+            v-model="form.id"
+            width="20"
+            type="number"
+            style="width: 150px"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="标题">
+          <el-input v-model="form.title" style="width: 300px"></el-input>
+        </el-form-item>
+        <el-form-item label="文章封面">
+          <el-input v-model="form.url" style="width: 800px"></el-input>
+        </el-form-item>
+        <el-form-item label="内容">
+          <md-editor v-model="form.content" class="md" />
+        </el-form-item>
+        <!-- <el-form-item label="创建时间">
+          <el-input v-model="form.createtime" style="width: 300px"></el-input>
+        </el-form-item> -->
+        <el-form-item class="block">
+          <span>创建时间</span>
+          <el-date-picker
+            v-model="form.createtime"
+            placeholder="Pick a day"
+            format="YY-MM-DD HH:DD"
+          >
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="editVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
+import dayjs from "dayjs";
+import MdEditor from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { fetchData } from "../api/index";
 
 export default {
-    name: "basetable",
-    setup() {
-        const query = reactive({
-            address: "",
-            name: "",
-            pageIndex: 1,
-            pageSize: 10,
-        });
-        const tableData = ref([]);
-        const pageTotal = ref(0);
-        // 获取表格数据
-        const getData = () => {
-            fetchData(query).then((res) => {
-                tableData.value = res.list;
-                pageTotal.value = res.pageTotal || 50;
-            });
-        };
-        getData();
-
-        // 查询操作
-        const handleSearch = () => {
-            query.pageIndex = 1;
-            getData();
-        };
-        // 分页导航
-        const handlePageChange = (val) => {
-            query.pageIndex = val;
-            getData();
-        };
-
-        // 删除操作
-        const handleDelete = (index) => {
-            // 二次确认删除
-            ElMessageBox.confirm("确定要删除吗？", "提示", {
-                type: "warning",
-            })
-                .then(() => {
-                    ElMessage.success("删除成功");
-                    tableData.value.splice(index, 1);
-                })
-                .catch(() => {});
-        };
-
-        // 表格编辑时弹窗和保存
-        const editVisible = ref(false);
-        let form = reactive({
-            name: "",
-            address: "",
-        });
-        let idx = -1;
-        const handleEdit = (index, row) => {
-            idx = index;
-            Object.keys(form).forEach((item) => {
-                form[item] = row[item];
-            });
-            editVisible.value = true;
-        };
-        const saveEdit = () => {
-            editVisible.value = false;
-            ElMessage.success(`修改第 ${idx + 1} 行成功`);
-            Object.keys(form).forEach((item) => {
-                tableData.value[idx][item] = form[item];
-            });
-        };
-
-        return {
-            query,
-            tableData,
-            pageTotal,
-            editVisible,
-            form,
-            handleSearch,
-            handlePageChange,
-            handleDelete,
-            handleEdit,
-            saveEdit,
-        };
+  name: "basetable",
+  components: { MdEditor },
+  data() {
+    return {
+      pageIndex: 1,
+      pageSize: 10,
+    };
+  },
+  methods: {
+    day(time) {
+      return dayjs(time).format("YY-MM-DD HH:DD");
     },
+  },
+  setup() {
+    const query = [];
+    const tableData = ref([]);
+    const pageTotal = ref(0);
+    // 获取表格数据
+    const getData = () => {
+      fetchData({}, "list").then((res) => {
+        tableData.value = res.data;
+        pageTotal.value = res.data.length / 8 || 50; //有多少页数
+      });
+    };
+    getData();
+
+    // 查询操作
+    const handleSearch = () => {
+      this.pageIndex = 1;
+      getData();
+    };
+    // 分页导航
+    const handlePageChange = (val) => {
+      this.pageIndex = val;
+      getData();
+    };
+
+    // 删除操作
+    const handleDelete = (index) => {
+      console.log(index);
+      // 二次确认删除
+      ElMessageBox.confirm("确定要删除吗？", "提示", {
+        type: "warning",
+      })
+        .then(() => {
+          tableData.value.splice(index, 1);
+          ElMessage.success("删除成功");
+        })
+        .catch(() => {});
+    };
+
+    // 表格编辑时弹窗和保存
+    const editVisible = ref(false);
+    let form = reactive({
+      id: Number,
+      title: String || "",
+      content: String || "编辑文章",
+      url: String,
+      createtime: Number,
+      state: Number,
+    });
+    let id = Number;
+    const handleEdit = (index, row) => {
+      console.log("index", index, "row", row);
+      id = index;
+      Object.keys(form).forEach((item) => {
+        form[item] = row[item];
+      });
+      editVisible.value = true;
+    };
+    const saveEdit = () => {
+      Object.keys(form).forEach((item) => {
+        tableData.value[id][item] = form[item];
+      });
+      fetchData(tableData.value[id], "update");
+
+      ElMessage.success(`修改ID为 ${form.id} 的文章成功`);
+      editVisible.value = false;
+    };
+
+    return {
+      query,
+      tableData,
+      pageTotal,
+      editVisible,
+      form,
+      handleSearch,
+      handlePageChange,
+      handleDelete,
+      handleEdit,
+      saveEdit,
+    };
+  },
 };
 </script>
 
 <style scoped>
 .handle-box {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
-
+.md {
+  width: auto;
+}
 .handle-select {
-    width: 120px;
+  width: 120px;
 }
-
+.edit {
+  flex-wrap: wrap;
+  display: flex;
+  width: auto;
+}
 .handle-input {
-    width: 300px;
-    display: inline-block;
+  width: 300px;
+  display: inline-block;
 }
 .table {
-    width: 100%;
-    font-size: 14px;
+  width: 100%;
+  font-size: 14px;
 }
 .red {
-    color: #ff0000;
+  color: #ff0000;
 }
 .mr10 {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 .table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100px;
+  height: 40px;
 }
 </style>

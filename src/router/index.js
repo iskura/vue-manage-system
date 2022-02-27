@@ -28,7 +28,7 @@ const routes = [
                 path: "/charts",
                 name: "basecharts",
                 meta: {
-                    title: '图表'
+                    title: '文章管理'
                 },
                 component: () => import ( /* webpackChunkName: "charts" */ "../views/BaseCharts.vue")
             }, {
@@ -45,13 +45,6 @@ const routes = [
                     title: 'tab标签'
                 },
                 component: () => import ( /* webpackChunkName: "tabs" */ "../views/Tabs.vue")
-            }, {
-                path: "/donate",
-                name: "donate",
-                meta: {
-                    title: '鼓励作者'
-                },
-                component: () => import ( /* webpackChunkName: "donate" */ "../views/Donate.vue")
             }, {
                 path: "/permission",
                 name: "permission",
